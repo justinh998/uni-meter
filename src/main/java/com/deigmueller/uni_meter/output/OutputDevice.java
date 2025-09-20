@@ -16,6 +16,7 @@ import org.apache.pekko.stream.Materializer;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.deigmueller.uni_meter.input.InputDevice;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -41,6 +42,8 @@ public abstract class OutputDevice extends AbstractBehavior<OutputDevice.Command
   private final Materializer materializer = Materializer.createMaterializer(getContext());
   private final ActorRef<UniMeter.Command> controller;
   private final ActorRef<MDnsRegistrator.Command> mdnsRegistrator;
+  private ActorRef<InputDevice.Command> inputDevice;
+  private final ActorRef<InputDevice.Ack> inputDeviceAckAdapter = getContext().messageAdapter(InputDevice.Ack.class, WrappedInputDeviceAck::new);
   private final Config config;
   private final Duration forgetInterval;
   private final double defaultVoltage;
@@ -116,7 +119,19 @@ public abstract class OutputDevice extends AbstractBehavior<OutputDevice.Command
           .onMessage(NotifyTotalPowerData.class, this::onNotifyTotalPowerData)
           .onMessage(NotifyPhaseEnergyData.class, this::onNotifyPhaseEnergyData)
           .onMessage(NotifyPhasesEnergyData.class, this::onNotifyPhasesEnergyData)
-          .onMessage(NotifyTotalEnergyData.class, this::onNotifyTotalEnergyData);
+          .onMessage(NotifyTotalEnergyData.class, this::onNotifyTotalEnergyData)
+          .onMessage(SetInputDevice.class, this::onSetInputDevice);
+  }
+    /**
+   * Handle the request to set the input device
+   * @param message Notification of Input Device
+   * @return Same behavior
+   */
+  protected @NotNull Behavior<Command> onSetInputDevice(@NotNull SetInputDevice message) {
+    logger.trace("OutputDevice.onSetInputDevice()");
+    this.inputDevice = message.inputDevice();
+
+    return Behaviors.same();
   }
 
   /**
@@ -545,7 +560,11 @@ public abstract class OutputDevice extends AbstractBehavior<OutputDevice.Command
         @NotNull EnergyData energyPhase0,
         @NotNull EnergyData energyPhase1,
         @NotNull EnergyData energyPhase2
-  ) {}                                                                                                  
+  ) {}
+  
+  public record SetInputDevice(
+        @NotNull ActorRef<InputDevice.Command> inputDevice
+  ) implements Command {}
   
   public record SwitchOn(
         @NotNull ActorRef<SwitchOnResponse> replyTo
@@ -650,5 +669,8 @@ public abstract class OutputDevice extends AbstractBehavior<OutputDevice.Command
   public record Ack(
         int messageId
   ) {}
+  public record WrappedInputDeviceAck(
+        @NotNull InputDevice.Ack ack
+  ) implements Command {}
   
 }

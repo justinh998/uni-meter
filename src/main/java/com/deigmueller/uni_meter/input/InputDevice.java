@@ -138,6 +138,9 @@ public abstract class InputDevice extends AbstractBehavior<InputDevice.Command> 
   }
   
   public interface Command {}
+  public record Ack(
+        int messageId
+  ) {}
   
   public record WrappedOutputDeviceAck(
     @NotNull OutputDevice.Ack ack

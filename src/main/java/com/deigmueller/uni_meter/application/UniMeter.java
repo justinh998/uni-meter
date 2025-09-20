@@ -53,7 +53,9 @@ public class UniMeter extends AbstractBehavior<UniMeter.Command> {
       getContext().watch(output);
 
       ActorRef<InputDevice.Command> input = createInput(output);
-      getContext().watch(input);       
+      getContext().watch(input);
+
+      output.tell(new OutputDevice.SetInputDevice(input));
       
       httpServerController.tell(
             new HttpServerController.RegisterHttpRoute(
