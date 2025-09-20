@@ -9,7 +9,11 @@ public abstract class PowerPhase {
     MONO,
     TRI
   }
+
   public static PhaseMode getPhaseMode(@NotNull String key, @NotNull Config config) {
+    if (!config.hasPath(key)) {
+      return PhaseMode.TRI; // default
+    }
     String value = config.getString(key);
 
     if (PHASE_MODE_MONO.compareToIgnoreCase(value) == 0) {
