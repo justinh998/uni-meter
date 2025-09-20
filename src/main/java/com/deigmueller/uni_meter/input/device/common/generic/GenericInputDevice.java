@@ -15,6 +15,8 @@ import org.apache.pekko.actor.typed.ActorRef;
 import org.apache.pekko.actor.typed.javadsl.ActorContext;
 import org.apache.pekko.stream.Materializer;
 import org.jetbrains.annotations.NotNull;
+import com.deigmueller.uni_meter.common.enums.PowerPhase;
+import com.deigmueller.uni_meter.common.enums.PowerPhase.PhaseMode;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -23,9 +25,8 @@ import java.util.Set;
 public abstract class GenericInputDevice extends InputDevice {
   // Instance members
   private final Materializer materializer = Materializer.createMaterializer(getContext());
-  private final PhaseMode powerPhaseMode = getPhaseMode("power-phase-mode");
-  private final PhaseMode energyPhaseMode = getPhaseMode("energy-phase-mode");
-
+  private final PhaseMode powerPhaseMode = PowerPhase.getPhaseMode("power-phase-mode",getConfig());
+  private final PhaseMode energyPhaseMode = PowerPhase.getPhaseMode("energy-phase-mode",getConfig());
   private double powerTotal;
   private double powerTotalProduction;
   private double voltage = getDefaultVoltage();

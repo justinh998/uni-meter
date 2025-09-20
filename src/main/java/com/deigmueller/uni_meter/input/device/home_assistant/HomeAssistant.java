@@ -17,6 +17,7 @@ import org.apache.pekko.http.javadsl.model.HttpEntity;
 import org.apache.pekko.http.javadsl.model.HttpRequest;
 import org.apache.pekko.http.javadsl.model.headers.HttpCredentials;
 import org.jetbrains.annotations.NotNull;
+import com.deigmueller.uni_meter.common.enums.PowerPhase.PhaseMode;
 
 import java.io.IOException;
 import java.time.Duration;

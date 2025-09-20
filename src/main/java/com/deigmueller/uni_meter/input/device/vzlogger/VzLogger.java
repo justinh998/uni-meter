@@ -16,6 +16,8 @@ import org.apache.pekko.http.javadsl.model.HttpRequest;
 import org.apache.pekko.http.javadsl.model.HttpResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import com.deigmueller.uni_meter.common.enums.PowerPhase;
+import com.deigmueller.uni_meter.common.enums.PowerPhase.PhaseMode;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -32,9 +34,9 @@ public class VzLogger extends HttpInputDevice {
   private final String consumptionChannel = getConfig().getString("energy-consumption-channel");
   private final String productionChannel = getConfig().getString("energy-production-channel");
   private final String powerChannel = getConfig().getString("power-channel");
-  private final PhaseMode powerPhaseMode = getPhaseMode("power-phase-mode");
+  private final PhaseMode powerPhaseMode = PowerPhase.getPhaseMode("power-phase-mode",getConfig());
   private final String powerPhase = getConfig().getString("power-phase");
-  private final PhaseMode energyPhaseMode = getPhaseMode("energy-phase-mode");
+  private final PhaseMode energyPhaseMode = PowerPhase.getPhaseMode("energy-phase-mode",getConfig());
   private final String energyPhase = getConfig().getString("energy-phase");
   private final int lastEnergyValuesQueueSize = getConfig().getInt("last-energy-values-queue-size");
   private final Deque<VzLoggerValue> lastProductionValues = new ArrayDeque<>();

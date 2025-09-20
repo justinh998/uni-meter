@@ -13,6 +13,8 @@ import org.apache.pekko.http.javadsl.model.HttpEntity;
 import org.apache.pekko.http.javadsl.model.HttpRequest;
 import org.apache.pekko.http.scaladsl.model.headers.HttpCredentials;
 import org.jetbrains.annotations.NotNull;
+import com.deigmueller.uni_meter.common.enums.PowerPhase;
+import com.deigmueller.uni_meter.common.enums.PowerPhase.PhaseMode;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -25,9 +27,9 @@ public class Tasmota extends HttpInputDevice {
   public static final String TYPE = "Tasmota";
 
   // Instance members
-  private final PhaseMode powerPhaseMode = getPhaseMode("power-phase-mode");
+  private final PhaseMode powerPhaseMode = PowerPhase.getPhaseMode("power-phase-mode",getConfig());
   private final String powerPhase = getConfig().getString("power-phase");
-  private final PhaseMode energyPhaseMode = getPhaseMode("energy-phase-mode");
+  private final PhaseMode energyPhaseMode = PowerPhase.getPhaseMode("energy-phase-mode",getConfig());
   private final String energyPhase = getConfig().getString("energy-phase");
   private final Duration statusPollingInterval = getConfig().getDuration("polling-interval");
   private final String powerJsonPath = getConfig().getString("power-json-path");

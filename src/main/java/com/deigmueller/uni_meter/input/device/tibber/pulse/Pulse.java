@@ -23,6 +23,8 @@ import org.openmuc.jsml.structures.SmlMessage;
 import org.openmuc.jsml.structures.EMessageBody;
 import org.openmuc.jsml.structures.responses.SmlGetListRes;
 import org.openmuc.jsml.structures.SmlListEntry;
+import com.deigmueller.uni_meter.common.enums.PowerPhase;
+import com.deigmueller.uni_meter.common.enums.PowerPhase.PhaseMode;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -34,9 +36,9 @@ public class Pulse extends HttpInputDevice {
     public static final String TYPE = "TibberPulse";
     
     // Instance members
-    private final PhaseMode powerPhaseMode = getPhaseMode("power-phase-mode");
+    private final PhaseMode powerPhaseMode = PowerPhase.getPhaseMode("power-phase-mode",getConfig());
     private final String powerPhase = getConfig().getString("power-phase");
-    private final PhaseMode energyPhaseMode = getPhaseMode("energy-phase-mode");
+    private final PhaseMode energyPhaseMode = PowerPhase.getPhaseMode("energy-phase-mode",getConfig());
     private final String energyPhase = getConfig().getString("energy-phase");
     private final String nodeId = getConfig().getString("node-id");
     private final String userId = getConfig().getString("user-id");

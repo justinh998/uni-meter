@@ -12,6 +12,7 @@ import org.apache.pekko.actor.typed.javadsl.Behaviors;
 import org.apache.pekko.actor.typed.javadsl.Receive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.deigmueller.uni_meter.common.enums.PowerPhase.PhaseMode;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -131,18 +132,6 @@ public abstract class InputDevice extends AbstractBehavior<InputDevice.Command> 
                   getOutputDeviceAckAdapter()));
     }
   }
-
-  protected @NotNull PhaseMode getPhaseMode(@NotNull String key) {
-    String value = getConfig().getString(key);
-
-    if (PHASE_MODE_MONO.compareToIgnoreCase(value) == 0) {
-      return PhaseMode.MONO;
-    } else if (PHASE_MODE_TRI.compareToIgnoreCase(value) == 0) {
-      return PhaseMode.TRI;
-    } else {
-      throw new IllegalArgumentException("unknown phase mode: " + value);
-    }
-  }
   
   protected int getNextMessageId() {
     return nextMessageId++;
@@ -153,9 +142,4 @@ public abstract class InputDevice extends AbstractBehavior<InputDevice.Command> 
   public record WrappedOutputDeviceAck(
     @NotNull OutputDevice.Ack ack
   ) implements Command {}
-
-  public enum PhaseMode {
-    MONO,
-    TRI
-  }
 }

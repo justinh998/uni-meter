@@ -11,15 +11,17 @@ import org.apache.pekko.actor.typed.javadsl.ActorContext;
 import org.apache.pekko.actor.typed.javadsl.Behaviors;
 import org.apache.pekko.actor.typed.javadsl.ReceiveBuilder;
 import org.jetbrains.annotations.NotNull;
+import com.deigmueller.uni_meter.common.enums.PowerPhase;
+import com.deigmueller.uni_meter.common.enums.PowerPhase.PhaseMode;
 
 public class Sdm120 extends Modbus {
   // Class members
   public static final String TYPE = "SDM120";
    
   // Instance members
-  private final PhaseMode powerPhaseMode = getPhaseMode("power-phase-mode");
+  private final PhaseMode powerPhaseMode = PowerPhase.getPhaseMode("power-phase-mode",getConfig());
   private final String powerPhase = getConfig().getString("power-phase");
-  private final PhaseMode energyPhaseMode = getPhaseMode("energy-phase-mode");
+  private final PhaseMode energyPhaseMode = PowerPhase.getPhaseMode("energy-phase-mode",getConfig());
   private final String energyPhase = getConfig().getString("energy-phase");
   private float voltage;
   private float current;

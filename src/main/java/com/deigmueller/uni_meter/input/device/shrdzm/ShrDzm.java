@@ -21,6 +21,8 @@ import java.net.SocketTimeoutException;
 import java.time.Duration;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.deigmueller.uni_meter.common.enums.PowerPhase;
+import com.deigmueller.uni_meter.common.enums.PowerPhase.PhaseMode;
 
 @Getter(AccessLevel.PROTECTED)
 public class ShrDzm extends InputDevice {
@@ -33,9 +35,9 @@ public class ShrDzm extends InputDevice {
   private final int port = getConfig().getInt("port");
   private final String bindInterface = getConfig().getString("interface");
   private final Duration socketTimeout = getConfig().getDuration("socket-timeout");
-  private final PhaseMode powerPhaseMode = getPhaseMode("power-phase-mode");
+  private final PhaseMode powerPhaseMode = PowerPhase.getPhaseMode("power-phase-mode",getConfig());
   private final String powerPhase = getConfig().getString("power-phase");
-  private final PhaseMode energyPhaseMode = getPhaseMode("energy-phase-mode");
+  private final PhaseMode energyPhaseMode = PowerPhase.getPhaseMode("energy-phase-mode",getConfig());
   private final String energyPhase = getConfig().getString("energy-phase");
   private final AtomicBoolean doReceive = new AtomicBoolean(true);
 
